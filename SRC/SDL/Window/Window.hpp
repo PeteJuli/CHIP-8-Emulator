@@ -1,20 +1,32 @@
 #pragma once
 
-#include <SDL3/SDL.h>
 #include <memory>
+
+//Forward Declarations
+struct SDL_Window;
+struct SDL_Renderer;
 
 namespace SDL
 {
+    //Forward Declarations
+    class Context;
+    
     class Window
     {
       public:
-        Window();
+        explicit Window(const Context& context);
 
-        bool eventHandling();
         void render();
-
+        bool eventHandling();
+        [[nodiscard]] bool isCreated() const;
+        
       private:
-        std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window{nullptr, SDL_DestroyWindow};
-        std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> renderer{nullptr, SDL_DestroyRenderer};
+        //Type Alias
+        using WindowPtr = std::unique_ptr<SDL_Window, void(*)(SDL_Window*)>;
+        using RendererPtr = std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)>;
+        
+        WindowPtr m_window{nullptr, nullptr};
+        RendererPtr m_renderer{nullptr, nullptr};
+        bool m_created{false};
     };
-} // namespace SDL
+} //namespace SDL

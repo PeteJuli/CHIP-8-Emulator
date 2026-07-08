@@ -1,20 +1,28 @@
 #include "Context.hpp"
-#include <stdexcept>
+#include <SDL3/SDL.h>
+#include <iostream>
 
 SDL::Context::Context()
 {
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
-        throw std::runtime_error("SDL_Init Error!");
-    }
+        std::cerr << "[SDL::Context] -> Init Failed!" << std::endl;
 
-    created = true;
+        return;
+    }
+    
+     m_created = true;
 }
 
 SDL::Context::~Context()
 {
-    if (created)
+    if (m_created)//Only CleanUp if its necessary
     {
         SDL_Quit();
     }
+}
+
+bool SDL::Context::isCreated() const
+{
+    return m_created;
 }

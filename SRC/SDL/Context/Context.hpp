@@ -1,15 +1,15 @@
 #pragma once
 
-#include <SDL3/SDL.h>
-
 namespace SDL
 {
     class Context
     {
-        bool created{false};
-
       public:
         Context();
         ~Context();
+        [[nodiscard]] bool isCreated() const;
+
+      private:
+        bool m_created{false};
     };
-} // namespace SDL
+} //namespace SDL
