@@ -26,6 +26,7 @@ The emulator maps your PC keyboard to the original CHIP-8 hexadecimal keypad (0-
  Q   W   E   D
  A   S   D   E
  Y   X   C   F
+```
 
 ## Third-Party Libraries
 - [SDL3](https://github.com/libsdl-org/SDL) — zlib
