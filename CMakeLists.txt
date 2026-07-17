@@ -13,6 +13,8 @@ SRC/SDL/Context/Context.hpp
 SRC/SDL/Window/Window.cpp
 SRC/SDL/Window/Window.hpp
 SRC/Emulator/Emulator.cpp
-SRC/Emulator/Emulator.hpp)
+SRC/Emulator/Emulator.hpp
+SRC/Chip8/Chip8.cpp
+SRC/Chip8/Chip8.hpp)
 
 target_link_libraries(CHIP-8-Emulator PRIVATE SDL3::SDL3)

@@ -12,7 +12,7 @@ SDL::Window::Window(const Context& context)
     }
 
     //SDL Window
-    SDL_Window *rawWindow = SDL_CreateWindow("CHIP-8-Emulator", 800, 600, 0);
+    SDL_Window *rawWindow = SDL_CreateWindow("CHIP-8-Emulator", 800, 600, 0);//Hardcoded window size...
     if (!rawWindow)
     {
         std::cerr << "[SDL::Window] -> Window Creation Failed!" << std::endl;
@@ -20,7 +20,7 @@ SDL::Window::Window(const Context& context)
         return;
     }
 
-    m_window = WindowPtr(rawWindow, SDL_DestroyWindow);
+    m_window.reset(rawWindow); 
 
     //SDL Renderer
     SDL_Renderer *rawRenderer = SDL_CreateRenderer(m_window.get(), nullptr);
@@ -31,12 +31,12 @@ SDL::Window::Window(const Context& context)
         return;
     }
     
-    m_renderer = RendererPtr(rawRenderer, SDL_DestroyRenderer);
+    m_renderer.reset(rawRenderer);
 
     m_created = true;
 }
 
-void SDL::Window::render()
+void SDL::Window::render(const std::array<uint8_t, 64 * 32>& buffer)
 {
     if (!m_created) return;
 
@@ -44,24 +44,32 @@ void SDL::Window::render()
     SDL_SetRenderDrawColor(m_renderer.get(), 10, 92, 172, 255);
     SDL_RenderClear(m_renderer.get());
 
-    //Present
-    SDL_RenderPresent(m_renderer.get());
-}
+    //calc CHIP-8 Pixel on 800x600 Window
+    constexpr float pixel_width = 800.0f / 64.0f;
+    constexpr float pixel_height = 600.0f / 32.0f;
 
-bool SDL::Window::eventHandling()
-{
-    SDL_Event event;
+    // draw pixel
+    SDL_SetRenderDrawColor(m_renderer.get(), 255, 255, 255, 255);
 
-    //OS-Events
-    while (SDL_PollEvent(&event))
+    for (int y = 0; y < 32; ++y)
     {
-        if (event.type == SDL_EVENT_QUIT)
+        for (int x = 0; x < 64; ++x)
         {
-            return false;
+            if (buffer[x + (y * 64)] == 1)
+            {
+                SDL_FRect rect{
+                    static_cast<float>(x) * pixel_width,
+                    static_cast<float>(y) * pixel_height,
+                    pixel_width,
+                    pixel_height
+                };
+                SDL_RenderFillRect(m_renderer.get(), &rect);
+            }
         }
     }
 
-    return true;
+    //Present
+    SDL_RenderPresent(m_renderer.get());
 }
 
 bool SDL::Window::isCreated() const
