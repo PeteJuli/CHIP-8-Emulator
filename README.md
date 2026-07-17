@@ -2,8 +2,8 @@
 Simple Chip8-Emulator written in modern C++ with SDL3
 
 ToDo:
--Sound System
--Keyboard Mapping for all Layouts(Currently it is only German Layout)
+- Sound System
+- Keyboard Mapping for all Layouts(Currently it is only German Layout)
 
 ### Keyboard Layout
 
